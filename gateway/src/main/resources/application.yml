@@ -1,3 +1,20 @@
+eureka:
+  client:
+    register-with-eureka: false
 spring:
     application:
         name: gateway
+    cloud:
+        gateway:
+          discovery:
+            locator:
+              enabled: true
+          routes:
+            - id: users
+              uri: http://localhost:8090
+              predicates:
+                - Path=/api/v1/users/**
+    config:
+      import: optional:configserver:http://localhost:8888
+server:
+    port: 8222
