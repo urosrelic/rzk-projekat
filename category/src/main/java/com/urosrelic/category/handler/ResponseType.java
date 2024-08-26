@@ -1,4 +1,4 @@
-package com.urosrelic.auth.enums;
+package com.urosrelic.category.handler;
 
 public enum ResponseType {
         SUCCESS,

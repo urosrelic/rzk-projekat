@@ -3,7 +3,7 @@ package com.urosrelic.auth.controller;
 import com.urosrelic.auth.dto.TokenRequest;
 import com.urosrelic.auth.dto.UserLoginRequest;
 import com.urosrelic.auth.dto.UserRegisterRequest;
-import com.urosrelic.auth.enums.ResponseType;
+import com.urosrelic.auth.handler.ResponseType;
 import com.urosrelic.auth.enums.Role;
 import com.urosrelic.auth.exception.WrongCredentialsException;
 import com.urosrelic.auth.handler.ResponseHandler;
@@ -53,7 +53,7 @@ public class AuthController {
             String token = authService.login(loginRequest);
             return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Login successful", HttpStatus.OK, token);
         } catch (WrongCredentialsException e) {
-            return ResponseHandler.generateResponse(ResponseType.ERROR, "Wrong credentials", HttpStatus.CREATED);
+            return ResponseHandler.generateResponse(ResponseType.ERROR, "Wrong credentials", HttpStatus.BAD_REQUEST);
         }
     }
 

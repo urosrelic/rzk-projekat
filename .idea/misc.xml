@@ -9,7 +9,16 @@
         <option value="$PROJECT_DIR$/discovery/pom.xml" />
         <option value="$PROJECT_DIR$/user/pom.xml" />
         <option value="$PROJECT_DIR$/auth/pom.xml" />
+        <option value="$PROJECT_DIR$/food/pom.xml" />
+        <option value="$PROJECT_DIR$/category/pom.xml" />
+        <option value="$PROJECT_DIR$/response-handler/response-handler/pom.xml" />
+        <option value="$PROJECT_DIR$/response-handler/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/response-handler/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_22" default="true" project-jdk-name="22" project-jdk-type="JavaSDK">

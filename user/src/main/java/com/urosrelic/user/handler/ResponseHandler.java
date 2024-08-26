@@ -1,4 +1,4 @@
-package com.urosrelic.auth.handler;
+package com.urosrelic.user.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

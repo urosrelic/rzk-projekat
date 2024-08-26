@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/response-handler/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
@@ -8,19 +11,27 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
-        <module name="user" />
         <module name="auth" />
         <module name="discovery" />
+        <module name="category" />
+        <module name="user" />
         <module name="gateway" />
+        <module name="food" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="response-handler" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="auth" options="-parameters" />
+      <module name="category" options="-parameters" />
       <module name="config-server" options="-parameters" />
       <module name="discovery" options="-parameters" />
+      <module name="food" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="response-handler" options="" />
       <module name="user" options="-parameters" />
     </option>
   </component>
