@@ -1,6 +1,6 @@
-package com.urosrelic.user.model;
+package com.urosrelic.auth.model;
 
-import com.urosrelic.user.enums.Role;
+import com.urosrelic.auth.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

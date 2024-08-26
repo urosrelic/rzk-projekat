@@ -1,6 +1,7 @@
-package com.urosrelic.user.dto;
+package com.urosrelic.auth.dto;
 
-import com.urosrelic.user.enums.Role;
+
+import com.urosrelic.auth.enums.Role;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,6 @@ public class UserRegisterRequest {
     @NotBlank(message = "Email is mandatory")
     private String email;
 
-    // validation for enum values
     private Role role;
 
     @NotBlank(message = "Password is mandatory")

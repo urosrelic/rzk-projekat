@@ -1,6 +1,6 @@
-package com.urosrelic.user.handler;
+package com.urosrelic.auth.handler;
 
-import com.urosrelic.user.enums.ResponseType;
+import com.urosrelic.auth.enums.ResponseType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -13,6 +13,18 @@ public class ResponseHandler {
         Map<String, Object> map = new HashMap<>();
         if (responseType == ResponseType.SUCCESS) {
             map.put("message", message);
+        } else {
+            map.put("error", message);
+        }
+
+        return new ResponseEntity<>(map, status);
+    }
+
+    public static ResponseEntity<Object> generateResponseWithBody(ResponseType responseType, String message, HttpStatus status, Object body) {
+        Map<String, Object> map = new HashMap<>();
+        if (responseType == ResponseType.SUCCESS) {
+            map.put("message", message);
+            map.put("body", body);
         } else {
             map.put("error", message);
         }
