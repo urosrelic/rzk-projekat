@@ -45,7 +45,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryData(@PathVariable String id) {
+    public ResponseEntity<?> getCategoryData(@PathVariable("id") String id) {
         Category category = categoryService.getCategoryData(id);
 
         if (category == null) {
@@ -67,7 +67,7 @@ public class CategoryController {
     }
 
     @GetMapping("/exists/{id}")
-    public boolean existsById(@PathVariable String id) {
+    public boolean existsById(@PathVariable("id") String id) {
         return categoryService.existsById(id);
     }
 }
