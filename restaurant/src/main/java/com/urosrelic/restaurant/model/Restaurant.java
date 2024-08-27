@@ -19,7 +19,7 @@ public class Restaurant {
     private String address;
     private String phone;
     private String description;
-    private double rating;
+    private Double rating;
     private List<String> foods;
     private String openinTime;
     private String closingTime;
