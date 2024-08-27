@@ -13,6 +13,7 @@
         <module name="config-server" />
         <module name="auth" />
         <module name="discovery" />
+        <module name="restaurant" />
         <module name="category" />
         <module name="user" />
         <module name="gateway" />
@@ -32,6 +33,7 @@
       <module name="food" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="response-handler" options="" />
+      <module name="restaurant" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
   </component>
