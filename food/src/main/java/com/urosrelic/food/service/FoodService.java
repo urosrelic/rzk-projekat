@@ -8,6 +8,7 @@ import com.urosrelic.food.handler.ResponseType;
 import com.urosrelic.food.model.Food;
 import com.urosrelic.food.repository.FoodRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,14 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class FoodService {
     private final FoodRepository foodRepository;
     private final CategoryClient categoryClient;
     // TODO add restaurant client -> check if restaurant exists
 
     public ResponseEntity<Object> saveFood(FoodCreationRequest request) {
-        List<String> categories = List.of(request.getCategories());
-
+        List<String> categories = request.getCategories();
         for (String category : categories) {
             if (!categoryClient.existsById(category)) {
                 return ResponseHandler.generateResponse(ResponseType.ERROR, "Category does not exist", HttpStatus.NOT_FOUND);
