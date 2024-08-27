@@ -6,7 +6,7 @@ eureka:
             defaultZone: http://localhost:8761/eureka/
 spring:
     application:
-        name: category-servce
+        name: category-service
     config:
         import: optional:configserver:http://localhost:8888
     data:
