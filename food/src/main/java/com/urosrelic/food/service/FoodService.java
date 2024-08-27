@@ -25,7 +25,16 @@ public class FoodService {
 
     public ResponseEntity<Object> saveFood(FoodCreationRequest request) {
         List<String> categories = request.getCategories();
+
+        if (categories.isEmpty()) {
+            return ResponseHandler.generateResponse(ResponseType.ERROR, "Categories cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+
         for (String category : categories) {
+            if (category == null || category.trim().isEmpty()) {
+                return ResponseHandler.generateResponse(ResponseType.ERROR, "Category ID cannot be empty or blank", HttpStatus.BAD_REQUEST);
+            }
+
             if (!categoryClient.existsById(category)) {
                 return ResponseHandler.generateResponse(ResponseType.ERROR, "Category does not exist", HttpStatus.NOT_FOUND);
             }
