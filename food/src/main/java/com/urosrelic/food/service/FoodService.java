@@ -1,6 +1,7 @@
 package com.urosrelic.food.service;
 
 import com.urosrelic.food.client.CategoryClient;
+import com.urosrelic.food.client.RestaurantClient;
 import com.urosrelic.food.dto.FoodCreationRequest;
 import com.urosrelic.food.enums.FoodUnit;
 import com.urosrelic.food.handler.ResponseHandler;
@@ -21,7 +22,7 @@ import java.util.List;
 public class FoodService {
     private final FoodRepository foodRepository;
     private final CategoryClient categoryClient;
-    // TODO add restaurant client -> check if restaurant exists
+    private final RestaurantClient restaurantClient;
 
     public ResponseEntity<Object> saveFood(FoodCreationRequest request) {
         List<String> categories = request.getCategories();
@@ -50,6 +51,11 @@ public class FoodService {
         }
 
         food.setUnit(request.getUnit());
+
+        if (!restaurantClient.existsById(request.getRestaurant())) {
+            return ResponseHandler.generateResponse(ResponseType.ERROR, "Restaurant does not exist", HttpStatus.NOT_FOUND);
+        }
+
         food.setRestaurant(request.getRestaurant());
 
         foodRepository.save(food);

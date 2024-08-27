@@ -24,6 +24,5 @@ public class FoodCreationRequest {
     @NotBlank(message = "Restaurant is mandatory")
     private String restaurant;
 
-    @NotEmpty(message = "Categories are mandatory")
     private List<String> categories;
 }
