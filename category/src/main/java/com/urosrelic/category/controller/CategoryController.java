@@ -66,7 +66,7 @@ public class CategoryController {
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Categories retrieved successfully", HttpStatus.OK, categories);
     }
 
-    @GetMapping("/exists/{id}")
+    @GetMapping("/existsById/{id}")
     public boolean existsById(@PathVariable("id") String id) {
         return categoryService.existsById(id);
     }

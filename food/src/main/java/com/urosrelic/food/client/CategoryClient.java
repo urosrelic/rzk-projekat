@@ -13,6 +13,6 @@ public interface CategoryClient {
     @GetMapping("/api/v1/category/getByIds")
     ResponseEntity<?> getCategoriesByIds(@RequestBody GetCategoriesByIdsRequest request);
 
-    @GetMapping("/api/v1/category/exists/{id}")
+    @GetMapping("/api/v1/category/existsById/{id}")
     boolean existsById(@PathVariable("id") String id);
 }
