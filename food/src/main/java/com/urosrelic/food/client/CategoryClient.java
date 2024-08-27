@@ -1,6 +1,7 @@
 package com.urosrelic.food.client;
 
 import com.urosrelic.food.beans.GetCategoriesByIdsRequest;
+import jakarta.ws.rs.Path;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,5 +14,5 @@ public interface CategoryClient {
     ResponseEntity<?> getCategoriesByIds(@RequestBody GetCategoriesByIdsRequest request);
 
     @GetMapping("/api/v1/category/exists/{id}")
-    boolean existsById(@PathVariable String id);
+    boolean existsById(@PathVariable("id") String id);
 }
