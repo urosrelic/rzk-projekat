@@ -1,0 +1,17 @@
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka/
+spring:
+    application:
+        name: restaurant-service
+    config:
+        import: optional:configserver:http://localhost:8888
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017/food-order-app-spring
+            database: food-order-app-spring
+server:
+    port: 8120
