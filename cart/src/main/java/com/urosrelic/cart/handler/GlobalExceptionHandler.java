@@ -1,5 +1,8 @@
 package com.urosrelic.cart.handler;
 
+import com.urosrelic.cart.exception.CartItemAlreadyExistsException;
+import com.urosrelic.cart.exception.FoodNotFoundException;
+import com.urosrelic.cart.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,4 +28,25 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FoodNotFoundException.class)
+    public ResponseEntity<Object> handleFoodNotFoundException(FoodNotFoundException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartItemAlreadyExistsException.class)
+    public ResponseEntity<Object> handleCartItemAlreadyExistsException(CartItemAlreadyExistsException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGenericException(Exception ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, "An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
