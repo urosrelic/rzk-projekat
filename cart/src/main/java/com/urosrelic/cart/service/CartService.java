@@ -34,6 +34,43 @@ public class CartService {
     private final CategoryClient categoryClient;
     private final RestaurantClient resturantClient;
 
+    public Cart editQuantity(String foodId, int quantity, String token) {
+        User user = authClient.getUser(token);
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        Cart cart = cartRepository.findByUserAndConfirmedFalse(user.getId());
+        if (cart == null) {
+            throw new CartEmptyException("Cart is empty");
+        }
+
+        Optional<CartItem> cartItemOptional = cart.getCartItems().stream()
+                .filter(item -> item.getFood().equals(foodId))
+                .findFirst();
+
+        if (cartItemOptional.isEmpty()) {
+            throw new CartItemNotFoundException("Item not found in cart");
+        }
+
+        CartItem cartItem = cartItemOptional.get();
+        cartItem.setQuantity(quantity);
+
+        cartRepository.save(cart);
+
+        double totalPrice = 0;
+        for (CartItem item : cart.getCartItems()) {
+            totalPrice += item.getPrice() * item.getQuantity();
+        }
+
+        cart.setCartTotal(totalPrice);
+        cartRepository.save(cart);
+
+        return cartRepository.findById(cart.getId())
+                .orElseThrow(() -> new GenericException("Error editing item quantity"));
+    }
+
     public Cart addToCart(String foodId, int quantity, String token) {
         User user;
         try {

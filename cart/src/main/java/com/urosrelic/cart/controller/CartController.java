@@ -28,4 +28,10 @@ public class CartController {
         CartResponse cart = cartService.getCartInformation(token);
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Cart retrieved", HttpStatus.OK, cart);
     }
+
+    @PatchMapping
+    public ResponseEntity<Object> editQuantity(@RequestBody AddToCartRequest request, @RequestHeader("Authorization") String token) {
+        Cart cart = cartService.editQuantity(request.getFoodId(), request.getQuantity(), token);
+        return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Item quantity updated", HttpStatus.OK, cart);
+    }
 }
