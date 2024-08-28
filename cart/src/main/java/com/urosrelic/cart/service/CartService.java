@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,6 +34,50 @@ public class CartService {
     private final FoodClient foodClient;
     private final CategoryClient categoryClient;
     private final RestaurantClient resturantClient;
+
+    public Cart removeFromCart(String foodId, String token) {
+        User user = authClient.getUser(token);
+
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        Cart cart = cartRepository.findByUserAndConfirmedFalse(user.getId());
+        if (cart == null) {
+            throw new CartEmptyException("Cart is empty");
+        }
+
+        log.info(cart.getCartItems().toString());
+
+        for (CartItem item : cart.getCartItems()) {
+            log.info("Cart item: {}", item.getFood());
+            log.info("Food id: {}", foodId);
+
+            if (item.getFood().equals(foodId)) {
+                log.info("Removing item from cart");
+                cart.getCartItems().remove(item);
+            } else {
+                throw new CartItemNotFoundException("Item not found in cart");
+            }
+        }
+
+        if (cart.getCartItems().isEmpty()) {
+            cartRepository.delete(cart);
+        }
+
+        cartRepository.save(cart);
+
+        double totalPrice = 0;
+        for (CartItem item : cart.getCartItems()) {
+            totalPrice += item.getPrice() * item.getQuantity();
+        }
+
+        cart.setCartTotal(totalPrice);
+        cartRepository.save(cart);
+
+        return cartRepository.findById(cart.getId())
+                .orElseThrow(() -> new GenericException("Error removing item from cart"));
+    }
 
     public Cart editQuantity(String foodId, int quantity, String token) {
         User user = authClient.getUser(token);

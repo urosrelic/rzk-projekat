@@ -1,6 +1,7 @@
 package com.urosrelic.cart.controller;
 
 import com.urosrelic.cart.dto.request.AddToCartRequest;
+import com.urosrelic.cart.dto.request.RemoveCartItemRequest;
 import com.urosrelic.cart.dto.response.CartResponse;
 import com.urosrelic.cart.handler.ResponseHandler;
 import com.urosrelic.cart.handler.ResponseType;
@@ -33,5 +34,11 @@ public class CartController {
     public ResponseEntity<Object> editQuantity(@RequestBody AddToCartRequest request, @RequestHeader("Authorization") String token) {
         Cart cart = cartService.editQuantity(request.getFoodId(), request.getQuantity(), token);
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Item quantity updated", HttpStatus.OK, cart);
+    }
+
+    @DeleteMapping("/remove-from-cart")
+    public ResponseEntity<Object> removeFromCart(@RequestBody RemoveCartItemRequest removeCartItemRequest, @RequestHeader("Authorization") String token) {
+        Cart cart = cartService.removeFromCart(removeCartItemRequest.getFoodId(), token);
+        return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Item removed from cart", HttpStatus.OK, cart);
     }
 }
