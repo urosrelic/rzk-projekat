@@ -1,12 +1,18 @@
 package com.urosrelic.cart.service;
 
+import com.urosrelic.cart.beans.Category;
 import com.urosrelic.cart.beans.Food;
+import com.urosrelic.cart.beans.Restaurant;
 import com.urosrelic.cart.beans.User;
 import com.urosrelic.cart.client.AuthClient;
+import com.urosrelic.cart.client.CategoryClient;
 import com.urosrelic.cart.client.FoodClient;
+import com.urosrelic.cart.client.RestaurantClient;
 import com.urosrelic.cart.dto.CartItem;
 import com.urosrelic.cart.dto.response.CartItemResponse;
 import com.urosrelic.cart.dto.response.CartResponse;
+import com.urosrelic.cart.dto.response.FoodResponse;
+import com.urosrelic.cart.dto.response.RestaurantResponse;
 import com.urosrelic.cart.exception.*;
 import com.urosrelic.cart.model.Cart;
 import com.urosrelic.cart.repository.CartRepository;
@@ -25,6 +31,8 @@ public class CartService {
     private final CartRepository cartRepository;
     private final AuthClient authClient;
     private final FoodClient foodClient;
+    private final CategoryClient categoryClient;
+    private final RestaurantClient resturantClient;
 
     public Cart addToCart(String foodId, int quantity, String token) {
         User user;
@@ -75,10 +83,9 @@ public class CartService {
     }
 
     public CartResponse getCartInformation(String token) {
-        User user;
-        try {
-            user = authClient.getUser(token);
-        } catch (Exception ex) {
+        User user = authClient.getUser(token);
+
+        if (user == null) {
             throw new UserNotFoundException("User not found");
         }
 
@@ -98,9 +105,10 @@ public class CartService {
                 throw new FoodNotFoundException("Food not found");
             }
 
-            Food food = foodOptional.get();
+            FoodResponse foodResponse = getFoodById(item.getFood());
+
             CartItemResponse cartItemResponse = new CartItemResponse();
-            cartItemResponse.setFood(food);
+            cartItemResponse.setFood(foodResponse);
             cartItemResponse.setQuantity(item.getQuantity());
             cartItemResponse.setPrice(item.getPrice());
             cartItems.add(cartItemResponse);
@@ -109,8 +117,53 @@ public class CartService {
         cartResponse.setCartItems(cartItems);
         cartResponse.setCartTotal(cart.getCartTotal());
         cartResponse.setConfirmed(cart.isConfirmed());
-
         return cartResponse;
+    }
+
+    public FoodResponse getFoodById(String foodId) {
+        Optional<Food> foodOptional = foodClient.getFoodById(foodId);
+        if (foodOptional.isEmpty()) {
+            throw new FoodNotFoundException("Food not found");
+        }
+
+        log.info("Food found: {}", foodOptional.get());
+
+        Food food = foodOptional.get();
+        FoodResponse foodResponse = new FoodResponse();
+        foodResponse.setId(food.getId());
+        foodResponse.setName(food.getName());
+        foodResponse.setPrice(food.getPrice());
+
+        RestaurantResponse restaurantResponse = getRestaurantById(food.getRestaurant());
+        foodResponse.setRestaurant(restaurantResponse);
+
+        List<Category> categories = new ArrayList<>();
+
+        for (String categoryId : food.getCategories()) {
+            Category category = categoryClient.getCategoryData(categoryId);
+            if (category == null) {
+                throw new CategoryNotFoundException("Category not found");
+            }
+            categories.add(category);
+        }
+
+        foodResponse.setCategories(categories);
+
+        return foodResponse;
+    }
+
+    public RestaurantResponse getRestaurantById(String restaurantId) {
+
+        Restaurant restaurant = resturantClient.getRestaurant(restaurantId);
+
+        if (restaurant == null) {
+            throw new RestaurantNotFoundException("Restaurant not found");
+        }
+
+        RestaurantResponse restaurantResponse = new RestaurantResponse();
+        restaurantResponse.setName(restaurant.getName());
+
+        return restaurantResponse;
     }
 
 }
