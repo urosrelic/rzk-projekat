@@ -7,6 +7,7 @@ import com.urosrelic.cart.client.FoodClient;
 import com.urosrelic.cart.dto.CartItem;
 import com.urosrelic.cart.exception.CartItemAlreadyExistsException;
 import com.urosrelic.cart.exception.FoodNotFoundException;
+import com.urosrelic.cart.exception.GenericException;
 import com.urosrelic.cart.exception.UserNotFoundException;
 import com.urosrelic.cart.model.Cart;
 import com.urosrelic.cart.repository.CartRepository;
@@ -70,6 +71,6 @@ public class CartService {
         }
 
         return cartRepository.findById(cart.getId())
-                .orElseThrow(() -> new RuntimeException("Error adding item to cart"));
+                .orElseThrow(() -> new GenericException("Error adding item to cart"));
     }
 }
