@@ -1,8 +1,7 @@
 package com.urosrelic.cart.handler;
 
-import com.urosrelic.cart.exception.CartItemAlreadyExistsException;
-import com.urosrelic.cart.exception.FoodNotFoundException;
-import com.urosrelic.cart.exception.UserNotFoundException;
+import com.urosrelic.cart.exception.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -11,10 +10,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -44,9 +45,29 @@ public class GlobalExceptionHandler {
         return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGenericException(Exception ex) {
-        return ResponseHandler.generateResponse(ResponseType.ERROR, "An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(CartEmptyException.class)
+    public ResponseEntity<Object> handleCartEmptyException(CartEmptyException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<Object> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
+        log.error("Unhandled exception: ", ex);
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "An unexpected error occurred");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
 
 }
