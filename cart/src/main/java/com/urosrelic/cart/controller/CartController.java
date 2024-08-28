@@ -1,6 +1,7 @@
 package com.urosrelic.cart.controller;
 
-import com.urosrelic.cart.dto.AddToCartRequest;
+import com.urosrelic.cart.dto.request.AddToCartRequest;
+import com.urosrelic.cart.dto.response.CartResponse;
 import com.urosrelic.cart.handler.ResponseHandler;
 import com.urosrelic.cart.handler.ResponseType;
 import com.urosrelic.cart.model.Cart;
@@ -20,5 +21,11 @@ public class CartController {
     public ResponseEntity<Object> addToCart(@RequestBody AddToCartRequest request, @RequestHeader("Authorization") String token) {
         Cart cart = cartService.addToCart(request.getFoodId(), request.getQuantity(), token);
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Item added to cart", HttpStatus.OK, cart);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getCart(@RequestHeader("Authorization") String token) {
+        CartResponse cart = cartService.getCartInformation(token);
+        return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Cart retrieved", HttpStatus.OK, cart);
     }
 }

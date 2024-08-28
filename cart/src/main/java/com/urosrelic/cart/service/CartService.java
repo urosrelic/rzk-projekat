@@ -5,16 +5,16 @@ import com.urosrelic.cart.beans.User;
 import com.urosrelic.cart.client.AuthClient;
 import com.urosrelic.cart.client.FoodClient;
 import com.urosrelic.cart.dto.CartItem;
-import com.urosrelic.cart.exception.CartItemAlreadyExistsException;
-import com.urosrelic.cart.exception.FoodNotFoundException;
-import com.urosrelic.cart.exception.GenericException;
-import com.urosrelic.cart.exception.UserNotFoundException;
+import com.urosrelic.cart.dto.response.CartItemResponse;
+import com.urosrelic.cart.dto.response.CartResponse;
+import com.urosrelic.cart.exception.*;
 import com.urosrelic.cart.model.Cart;
 import com.urosrelic.cart.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,4 +73,44 @@ public class CartService {
         return cartRepository.findById(cart.getId())
                 .orElseThrow(() -> new GenericException("Error adding item to cart"));
     }
+
+    public CartResponse getCartInformation(String token) {
+        User user;
+        try {
+            user = authClient.getUser(token);
+        } catch (Exception ex) {
+            throw new UserNotFoundException("User not found");
+        }
+
+        Cart cart = cartRepository.findByUserAndConfirmedFalse(user.getId());
+        if (cart == null) {
+            throw new CartEmptyException("Cart is empty");
+        }
+
+        CartResponse cartResponse = new CartResponse();
+        cartResponse.setId(cart.getId());
+
+        List<CartItemResponse> cartItems = new ArrayList<>();
+
+        for (CartItem item : cart.getCartItems()) {
+            Optional<Food> foodOptional = foodClient.getFoodById(item.getFood());
+            if (foodOptional.isEmpty()) {
+                throw new FoodNotFoundException("Food not found");
+            }
+
+            Food food = foodOptional.get();
+            CartItemResponse cartItemResponse = new CartItemResponse();
+            cartItemResponse.setFood(food);
+            cartItemResponse.setQuantity(item.getQuantity());
+            cartItemResponse.setPrice(item.getPrice());
+            cartItems.add(cartItemResponse);
+        }
+
+        cartResponse.setCartItems(cartItems);
+        cartResponse.setCartTotal(cart.getCartTotal());
+        cartResponse.setConfirmed(cart.isConfirmed());
+
+        return cartResponse;
+    }
+
 }
