@@ -1,6 +1,7 @@
 package com.urosrelic.cart.handler;
 
 import com.urosrelic.cart.exception.*;
+import com.urosrelic.cart.model.Cart;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<Object> handleCartItemNotFoundException(CartItemNotFoundException ex) {
         return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
