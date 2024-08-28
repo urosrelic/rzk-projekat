@@ -59,6 +59,18 @@ spring:
             - Path=/api/v1/restaurant/**
           filters: [ ]
 
+        - id: cart-service-auth
+          uri: http://localhost:8130
+          predicates:
+            - Path=/api/v1/cart/auth/**
+          filters:
+            - name: AuthenticationFilter
+        - id: cart-service
+          uri: http://localhost:8130
+          predicates:
+            - Path=/api/v1/cart/**
+          filters: [ ]
+
 
 server:
   port: 8222

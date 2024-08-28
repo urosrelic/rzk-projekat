@@ -20,4 +20,8 @@ public class RestaurantService {
     public boolean existsById(String id) {
         return restaurantRepository.existsById(id);
     }
+
+    public Restaurant getRestaurant(String id) {
+        return restaurantRepository.findById(id).orElse(null);
+    }
 }

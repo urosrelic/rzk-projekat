@@ -24,6 +24,10 @@ public class FoodService {
     private final CategoryClient categoryClient;
     private final RestaurantClient restaurantClient;
 
+    public Food getFoodById(String id) {
+        return foodRepository.findById(id).orElse(null);
+    }
+
     public ResponseEntity<Object> saveFood(FoodCreationRequest request) {
         List<String> categories = request.getCategories();
 

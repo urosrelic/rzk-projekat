@@ -34,4 +34,9 @@ public class FoodController {
 
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Foods retrieved successfully", HttpStatus.OK, foods);
     }
+
+    @GetMapping("/{id}")
+    public Food getFoodById(@PathVariable String id) {
+        return foodService.getFoodById(id);
+    }
 }

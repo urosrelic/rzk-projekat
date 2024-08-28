@@ -44,7 +44,7 @@ public class CategoryController {
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Categories retrieved successfully", HttpStatus.OK, categories);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-category-data/{id}")
     public ResponseEntity<?> getCategoryData(@PathVariable("id") String id) {
         Category category = categoryService.getCategoryData(id);
 
@@ -53,6 +53,11 @@ public class CategoryController {
         }
 
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Category retrieved successfully", HttpStatus.OK, category);
+    }
+
+    @GetMapping("/{id}")
+    public Category getCategory(@PathVariable("id") String id) {
+        return categoryService.getCategoryData(id);
     }
 
     @PostMapping("/getByIds")

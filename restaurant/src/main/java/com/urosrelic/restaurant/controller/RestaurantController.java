@@ -28,6 +28,11 @@ public class RestaurantController {
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Restaurant created", HttpStatus.CREATED, restaurant);
     }
 
+    @GetMapping("/{id}")
+    public Restaurant getRestaurant(@PathVariable String id) {
+        return restaurantService.getRestaurant(id);
+    }
+
     @GetMapping("/existsById/{id}")
     public boolean existsById(@PathVariable String id) {
         return restaurantService.existsById(id);
