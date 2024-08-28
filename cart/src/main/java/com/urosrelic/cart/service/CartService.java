@@ -20,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -44,39 +41,42 @@ public class CartService {
 
         Cart cart = cartRepository.findByUserAndConfirmedFalse(user.getId());
         if (cart == null) {
+            throw new CartNotFoundException("Cart not found");
+        }
+
+        if (cart.getCartItems().isEmpty()) {
             throw new CartEmptyException("Cart is empty");
         }
 
         log.info(cart.getCartItems().toString());
 
-        for (CartItem item : cart.getCartItems()) {
-            log.info("Cart item: {}", item.getFood());
-            log.info("Food id: {}", foodId);
-
+        Iterator<CartItem> iterator = cart.getCartItems().iterator();
+        boolean itemFound = false;
+        while (iterator.hasNext()) {
+            CartItem item = iterator.next();
             if (item.getFood().equals(foodId)) {
-                log.info("Removing item from cart");
-                cart.getCartItems().remove(item);
-            } else {
-                throw new CartItemNotFoundException("Item not found in cart");
+                iterator.remove();
+                itemFound = true;
+                break;
             }
+        }
+
+        if (!itemFound) {
+            throw new CartItemNotFoundException("Item not found in cart");
         }
 
         if (cart.getCartItems().isEmpty()) {
             cartRepository.delete(cart);
+        } else {
+            double totalPrice = 0;
+            for (CartItem item : cart.getCartItems()) {
+                totalPrice += item.getPrice() * item.getQuantity();
+            }
+            cart.setCartTotal(totalPrice);
+            cartRepository.save(cart);
         }
 
-        cartRepository.save(cart);
-
-        double totalPrice = 0;
-        for (CartItem item : cart.getCartItems()) {
-            totalPrice += item.getPrice() * item.getQuantity();
-        }
-
-        cart.setCartTotal(totalPrice);
-        cartRepository.save(cart);
-
-        return cartRepository.findById(cart.getId())
-                .orElseThrow(() -> new GenericException("Error removing item from cart"));
+        return cart;
     }
 
     public Cart editQuantity(String foodId, int quantity, String token) {
@@ -160,8 +160,7 @@ public class CartService {
             }
         }
 
-        return cartRepository.findById(cart.getId())
-                .orElseThrow(() -> new GenericException("Error adding item to cart"));
+        return cart;
     }
 
     public CartResponse getCartInformation(String token) {

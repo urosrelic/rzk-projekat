@@ -67,6 +67,11 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<Object> handleCartNotFoundException(CartNotFoundException ex) {
+        return ResponseHandler.generateResponse(ResponseType.ERROR, ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         log.error("Unhandled exception: ", ex);
