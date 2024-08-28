@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemResponse {
-    private Food food;
+    private FoodResponse food;
     private int quantity;
     private double price;
 }
