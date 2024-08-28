@@ -77,18 +77,22 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/get-user")
-    public ResponseEntity<Object> getUser(@RequestHeader("Authorization") String token) {
-        // Extract email from token
+    @GetMapping("/get-user-data")
+    public ResponseEntity<Object> getUserData(@RequestHeader("Authorization") String token) {
         String email = jwtService.extractUsername(token.replace("Bearer ", "").trim());
 
-        // Fetch user by email
         Optional<User> userOptional = authService.getUserByEmail(email);
         if (userOptional.isPresent()) {
             return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "User found", HttpStatus.OK, userOptional.get());
         } else {
             return ResponseHandler.generateResponse(ResponseType.ERROR, "User not found", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/get-user")
+    public User getUser(@RequestHeader("Authorization") String token) {
+        String email = jwtService.extractUsername(token.replace("Bearer ", "").trim());
+        return authService.getUserByEmail(email).orElse(null);
     }
 
 }
