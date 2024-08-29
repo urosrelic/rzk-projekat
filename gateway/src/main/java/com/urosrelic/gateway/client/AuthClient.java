@@ -18,7 +18,7 @@ public class AuthClient {
     private final WebClient webClient;
 
     public AuthClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:9898").build();
+        this.webClient = webClientBuilder.baseUrl("http://auth-service:9898").build();
     }
 
     public Mono<TokenResponse> validateToken(TokenRequest tokenRequest) {
