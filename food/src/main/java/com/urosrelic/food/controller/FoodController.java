@@ -5,13 +5,11 @@ import com.urosrelic.food.handler.ResponseHandler;
 import com.urosrelic.food.handler.ResponseType;
 import com.urosrelic.food.model.Food;
 import com.urosrelic.food.service.FoodService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,7 +20,7 @@ public class FoodController {
     private final FoodService foodService;
 
     @PostMapping("/auth/add")
-    public ResponseEntity<?> addFood(FoodCreationRequest request) {
+    public ResponseEntity<?> addFood(@Valid @RequestBody FoodCreationRequest request) {
         return foodService.saveFood(request);
     }
 
@@ -35,5 +33,10 @@ public class FoodController {
         }
 
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Foods retrieved successfully", HttpStatus.OK, foods);
+    }
+
+    @GetMapping("/{id}")
+    public Food getFoodById(@PathVariable String id) {
+        return foodService.getFoodById(id);
     }
 }

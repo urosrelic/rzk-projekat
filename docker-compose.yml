@@ -1,0 +1,107 @@
+version: '3.8'
+services:
+  # Config Server
+  config-server:
+    image: urosrelic/config-server:1.0
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - spring-cloud-network
+
+  # Eureka Server
+  discovery-server:
+    image: urosrelic/discovery:1.0
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - spring-cloud-network
+
+  # Gateway Service
+  gateway-service:
+    image: urosrelic/gateway:1.0
+    container_name: gateway-service
+    ports:
+      - "8222:8222"
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - discovery-server
+      - config-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+
+  # Auth Service
+  auth-service:
+    image: urosrelic/auth:1.0
+    container_name: auth-service
+    ports:
+      - "9898:9898"
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - discovery-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+
+  # Food Service
+  food-service:
+    image: urosrelic/food:1.0
+    container_name: food-service
+    ports:
+      - "8100:8100"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - config-server
+      - discovery-server
+
+  # Restaurant Service
+  restaurant-service:
+    image: urosrelic/restaurant:1.0
+    container_name: restaurant-service
+    ports:
+      - "8120:8120"
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - discovery-server
+      - config-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+
+  # Category Service
+  category-service:
+    image: urosrelic/category:1.0
+    container_name: category-service
+    ports:
+      - "8110:8110"
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - discovery-server
+      - config-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+
+  # Cart Service
+  cart-service:
+    image: urosrelic/cart:1.0
+    container_name: cart-service
+    ports:
+      - "8130:8130"
+    networks:
+      - spring-cloud-network
+    depends_on:
+      - discovery-server
+      - config-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://discovery-server:8761/eureka/
+
+
+networks:
+  spring-cloud-network:
+    driver: bridge

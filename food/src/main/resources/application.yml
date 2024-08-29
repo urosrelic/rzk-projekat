@@ -6,12 +6,12 @@ eureka:
             defaultZone: http://localhost:8761/eureka/
 spring:
     application:
-        name: food-servce
+        name: food-service
     config:
         import: optional:configserver:http://localhost:8888
     data:
         mongodb:
-            uri: mongodb://localhost:27017/food-order-app-spring
+            uri: mongodb+srv://urosrelicc:rACDvKWAv2HSKwsl@cluster0.pti2k.mongodb.net/food-order-app-spring?retryWrites=true&w=majority&appName=Cluster0
             database: food-order-app-spring
 server:
     port: 8100
