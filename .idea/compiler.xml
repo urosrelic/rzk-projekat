@@ -15,7 +15,6 @@
         <module name="discovery" />
         <module name="restaurant" />
         <module name="category" />
-        <module name="user" />
         <module name="gateway" />
         <module name="food" />
         <module name="cart" />
@@ -23,6 +22,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="response-handler" target="1.8" />
+      <module name="user" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
