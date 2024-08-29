@@ -57,13 +57,13 @@ spring:
           filters: [ ]
 
         - id: cart-service-auth
-          uri: http://cart-service:8120
+          uri: http://cart-service:8130
           predicates:
             - Path=/api/v1/cart/auth/**
           filters:
             - name: AuthenticationFilter
         - id: cart-service
-          uri: http://cart-service:8120
+          uri: http://cart-service:8130
           predicates:
             - Path=/api/v1/cart/**
           filters: [ ]
