@@ -6,10 +6,16 @@ import com.urosrelic.restaurant.repository.RestaurantRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
+
+    public List<Restaurant> getRestaurants() {
+        return restaurantRepository.findAll();
+    }
 
     public Restaurant addRestaurant(RestaurantCreationRequest request) {
         Restaurant restaurant = new Restaurant();

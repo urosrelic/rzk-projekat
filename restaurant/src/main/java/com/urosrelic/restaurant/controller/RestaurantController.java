@@ -28,6 +28,11 @@ public class RestaurantController {
         return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Restaurant created", HttpStatus.CREATED, restaurant);
     }
 
+    @GetMapping
+    public ResponseEntity<?> getRestaurants() {
+        return ResponseHandler.generateResponseWithBody(ResponseType.SUCCESS, "Restaurants retrieved", HttpStatus.OK, restaurantService.getRestaurants());
+    }
+
     @GetMapping("/{id}")
     public Restaurant getRestaurant(@PathVariable String id) {
         return restaurantService.getRestaurant(id);
